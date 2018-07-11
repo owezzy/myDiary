@@ -2,24 +2,23 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="./css/styles.css"/>
     <script src="main.js"></script>
 </head>
 
 <body>
-    <header>
-        <div class="container">
-            <div id="brand">
-                <h1>owezzy</h1>
-            </div>
+<header>
+    <div class="container">
+        <div id="brand">
+            <h1><span class="highlight">owezzy</span></h1>
         </div>
         <nav>
             <ul>
-                <li>
+                <li class="current">
                     <a href="index.html">Home</a>
                 </li>
                 <li>
@@ -34,7 +33,25 @@
 
             </ul>
         </nav>
-    </header>
+    </div>
+</header>
+
+<section id="showcase">
+    <div class="container">
+        <h1> diary entry</h1>
+        <form>
+            <input type="date" id="dateOfEntry">
+            <input type="text" placeholder="Write thoughts here...">
+            <button type="submit" class="saveButton"></button>
+        </form>
+    </div>
+    <div>
+        <a href="allEntries.html">Edit Entry</a>
+    </div>
+</section>
+<footer>
+    <p>Owezzy Web Design, Copyright &copy; 2018</p>
+</footer>
 </body>
 
 </html>
