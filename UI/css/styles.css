@@ -1,0 +1,181 @@
+body {
+    font: 15px/1.5 Arial, Helvetica, sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color: #f4f4f4f4;
+}
+
+/* global */
+
+.container {
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    padding: 15px;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+/*Header*/
+
+header {
+    background: #35424a;
+    color: white;
+    padding-top: 20px;
+    min-height: 70px;
+    border-bottom: #e8491d 3px solid;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+header li {
+    display: inline;
+    padding: 0 20px 0 20px;
+}
+
+header #brand {
+    float: left;
+}
+
+header #brand h1 {
+    margin: 0 10px;
+    ;
+}
+
+/*nav*/
+
+header nav {
+    float: right;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+
+header .highlight,
+header .active a {
+    color: #e8491d;
+    font-weight: bold;
+}
+
+.main-nav__item a:hover {
+    color: #e8491d;
+    font-weight: bold;
+    border-bottom: 5px solid #ffffff
+}
+
+.main-nav__item--cta a {
+    color: #ffffff;
+    background: #e8491d;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+.main-nav__item--cta a:hover,
+.main-nav__item--cta a:active {
+    color: #e8491d;
+    background: #ffffff;
+    border: none;
+}
+
+/* showcase*/
+
+#showcase {
+    background: url("../images/diary.png") no-repeat center;
+    text-align: center;
+    color: black;
+    min-height: 600px;
+    padding: 20px
+}
+
+#showcase h1 {
+    margin-top: 100px;
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+/*form*/
+
+input[type=date],
+select {
+    width: 40%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #ccc;
+}
+
+input[type=date]:hover {
+    background-color: lightblue;
+}
+
+label {
+    vertical-align: top;
+    font-size: 14px
+}
+
+#entryMessage {
+    width: 40%;
+    padding: 12px 10px;
+    margin: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+entryMessage:hover {
+    background-color: lightblue;
+}
+
+.form-nav__item--submit {
+    background-color: #4CAF50;
+    padding: 8px 20px;
+    border: none;
+    height: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.form-nav__item--submit:hover {
+    background-color: #45a049;
+}
+
+.form-nav__item--edit a {
+    color: #ffffff;
+    background: #421de8;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.form-nav__item--edit a:hover,
+.form-nav__item--edit a:active {
+    color: chocolate;
+    background: #2c7df7;
+    border: none;
+}
+
+/*form buttons*/
+
+section li {
+    display: inline;
+    padding: 15px;
+}
+
+section a {
+    text-decoration: none;
+}
+
+footer {
+    padding: 20px;
+    color: #ffffff;
+    background-color: #e8491d;
+    text-align: center;
+}
