@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Home</title>
+    <title>All Entries</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="./css/styles.css" />
     <script src="main.js"></script>
 </head>
 
@@ -14,27 +14,62 @@
     <header>
         <div class="container">
             <div id="brand">
-                <h1>owezzy</h1>
+                <h1>
+                    <span class="highlight">owezzy</span>
+                </h1>
             </div>
-        </div>
-        <nav>
-            <ul>
-                <li>
-                    <a href="index.html">Home</a>
-                </li>
-                <li>
-                    <a href="allEntries.html">All Entries</a>
-                </li>
-                <li>
-                    <a href="userProfile.html">My Profile</a>
-                </li>
-                <li>
-                    <a href="./auth/login.html">Logout</a>
-                </li>
+            <nav class="main-nav">
+                <ul class="main-nav-items">
+                    <li class="main-nav__item">
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li class="main-nav__item">
+                        <a href="allEntries.html">All Entries</a>
+                    </li>
+                    <li class="main-nav__item">
+                        <a href="userProfile.html">My Profile</a>
+                    </li>
+                    <li class="main-nav__item main-nav__item--cta">
+                        <a href="./auth/login.html">Logout</a>
+                    </li>
 
-            </ul>
-        </nav>
+                </ul>
+            </nav>
+        </div>
     </header>
+
+    <body>
+        <section id="showcase">
+            <div class="diary-entry-container">
+                <h2>Edit Entry</h2>
+                <form>
+                    <div>
+                        <label class="left" for="entryTitle">Title :</label>
+                        <input type="text" id="entryTitle" name="Title_of_Entry" placeholder="choose a title">
+                    </div>
+                    <br>
+                    <div>
+                        <label class="left" for="entryMessage">Message:</label>
+                        <textarea rows="5" type="Message" id="entryMessage" name="Entry_Message">
+                        </textarea>
+                    </div>
+                    <ul>
+                        <!--input type="submit" value="Submit"-->
+                        <li class=" form-nav__item--submit">
+                            <a href="">Update Entry</a>
+                        </li>
+                        <li class=" form-nav__item--cancel">
+                            <a href="allEntries.html">Cancel</a>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </section>
+    </body>
+    <footer>
+        <p>
+            <a href="https://owezzy.github.io" target="_blank">Owezzy</a> 2018&copy;</p>
+    </footer>
 </body>
 
 </html>

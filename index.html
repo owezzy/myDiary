@@ -12,7 +12,7 @@
 
 <body>
     <header>
-        <div class="container">
+        <div class="container#1">
             <div id="brand">
                 <h1>
                     <span class="highlight">owezzy</span>
@@ -39,32 +39,26 @@
     </header>
 
     <section id="showcase">
-        <div class="container">
+        <div class="diary-entry-container">
             <h2> DIARY ENTRY</h2>
-            <div>
-                <form>
-                    <div>
-                        <label class="left" for="entryDate">Date :</label>
-                        <input type="date" id="entryDate" name="Date_of_Entry" placeholder="choose date">
-                    </div>
-                    <br>
-                    <div>
-                        <label class="left" for="entryMessage">Message:</label>
-                        <textarea rows=10 type="text" id="entryMessage" name="Entry_Message">
-                        </textarea>
-                    </div>
-                    <ul>
-                        <!--input type="submit" value="Submit"-->
-                        <li class="main-nav__item form-nav__item--submit">
-                            <a href="">Submit</a>
-                        </li>
-                        <li class="main-nav__item form-nav__item--edit">
-                            <a href="allEntries.html">Edit Entry</a>
-                        </li>
-                    </ul>
-                </form>
-            </div>
-
+            <form>
+                <div>
+                    <label class="left" for="entryTitle">Title :</label>
+                    <input type="text" id="entryTitle" name="Title_of_Entry" placeholder="choose a title">
+                </div>
+                <br>
+                <div>
+                    <label class="left" for="entryMessage">Message:</label>
+                    <textarea rows="5" type="Message" id="entryMessage" name="Entry_Message">
+                    </textarea>
+                </div>
+                <ul>
+                    <!--input type="submit" value="Submit"-->
+                    <li class="form-nav__item--submit">
+                        <a href="">Submit</a>
+                    </li>
+                </ul>
+            </form>
         </div>
     </section>
     <footer>

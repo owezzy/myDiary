@@ -7,7 +7,7 @@ body {
 
 /* global */
 
-.container {
+.container#1 {
     width: 100%;
     margin: auto;
     overflow: hidden;
@@ -34,6 +34,7 @@ header a {
     text-decoration: none;
     text-transform: uppercase;
     font-size: 16px;
+    font-style: oblique;
 }
 
 header li {
@@ -82,6 +83,22 @@ header .active a {
     color: #e8491d;
     background: #ffffff;
     border: none;
+    padding: 13px;
+}
+
+.main-nav__item--login a {
+    color: #ffffff;
+    background: #43A047;
+    padding: 8px 16px;
+    border-radius: 8px
+}
+
+.main-nav__item--login a:hover,
+.main-nav__item--login a:active {
+    color: #35424a;
+    background: #4CAF50;
+    padding: 8px 16px;
+    border-radius: 8px;
 }
 
 /* showcase*/
@@ -90,8 +107,9 @@ header .active a {
     background: url("../images/diary.png") no-repeat center;
     text-align: center;
     color: black;
-    min-height: 600px;
-    padding: 20px
+    min-height: 700px;
+    padding: 8px;
+    align-content: center;
 }
 
 #showcase h1 {
@@ -100,20 +118,46 @@ header .active a {
     margin-bottom: 10px;
 }
 
-/*form*/
+/*entry form*/
 
-input[type=date],
+.diary-entry-list-container {
+    align-content: center;
+}
+
+.diary-entry-list-container ul {
+    margin: auto;
+    margin-left: 20%;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 #00000033;
+    transition: 0.3s;
+    align-items: center;
+    width: 80%;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 #00000033;
+}
+
+.card-container {
+    padding: 8px 16px;
+    background-color: #ebe8e8;
+    align-items: center;
+}
+
+input[type=text],
 select {
-    width: 40%;
+    width: 50%;
     padding: 12px 20px;
-    margin: 8px 0;
+    margin: 0;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
     background-color: #ccc;
 }
 
-input[type=date]:hover {
+input[type=text]:hover {
     background-color: lightblue;
 }
 
@@ -123,7 +167,7 @@ label {
 }
 
 #entryMessage {
-    width: 40%;
+    width: 50%;
     padding: 12px 10px;
     margin: 8px;
     border: 1px solid #ccc;
@@ -136,22 +180,44 @@ entryMessage:hover {
 }
 
 .form-nav__item--submit {
-    background-color: #4CAF50;
-    padding: 8px 20px;
+    background-color: #43A047;
+    padding: 8px 18px;
     border: none;
-    height: 30px;
-    border-radius: 8px;
-    cursor: pointer;
+    height: 27px;
+    border-radius: 5px;
+    margin: 8px;
+}
+
+.form-nav__item--submit a {
+    color: #FFFFFF;
 }
 
 .form-nav__item--submit:hover {
-    background-color: #45a049;
+    background-color: chocolate;
+}
+
+.form-nav__item--cancel {
+    background-color: red;
+    padding: 8px 18px;
+    border: none;
+    height: 27px;
+    border-radius: 5px;
+    margin: 8px;
+}
+
+.form-nav__item--cancel a {
+    color: #FFFFFF;
+}
+
+.form-nav__item--cancel:hover {
+    background-color: chocolate;
 }
 
 .form-nav__item--edit a {
     color: #ffffff;
     background: #421de8;
     padding: 8px;
+    font-style: oblique;
     border-radius: 8px;
 }
 
@@ -180,30 +246,77 @@ footer {
     text-align: center;
 }
 
-#allDiaryEntries {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 75%;
+/*auth css*/
+
+.login-section {
+    background-image: url("../images/bg-01.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
-#allDiaryEntries td,
-#customers th {
-    border: 1px solid #ddd;
-    padding: 8px;
+.login-page {
+    width: 360px;
+    padding: 8% 0 0;
+    margin: auto;
 }
 
-#allDiaryEntries tr:nth-child(even) {
-    background-color: #f2f2f2
-}
-
-#allDiaryEntries tr:hover {
-    background-color: #85afee;
-}
-
-#allDiaryEntries th {
-    padding-top: 12px;
-    padding-bottom: 12px;
+.auth-form {
+    position: relative;
+    z-index: 1;
+    background: #FFFFFF;
+    max-width: 360px;
+    margin: 0 auto 100px;
+    padding: 45px;
     text-align: center;
-    background-color: #4CAF50;
-    color: white;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
+
+.auth-form input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.auth-form button {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+}
+
+.auth-form button:hover,
+.auth-form button:active,
+.auth-form button:focus {
+    background: #43A047;
+}
+
+.form .message {
+    margin: 15px 0 0;
+    color: #b3b3b3;
+    font-size: 12px;
+}
+
+.form .message a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.form .register-form {
+    display: none;
+}
+
+/*user profile css*/
