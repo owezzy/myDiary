@@ -5,6 +5,44 @@ from models import EntryModel
 import status
 from pytz import utc
 
+
+class EntryManager:
+    last_id = 0
+
+    def __init__(self):
+        self.entries = {}
+
+    def insert_entry(self, entry):
+        self.__class__ .last_id += 1
+        entry.id = self.__class__.last_id
+        self.entries[self.__class__.last_id] = entry
+
+    def get_entry(self, id):
+        return self.entries[id]
+
+    def delete_entry(self, id):
+        return self.entries[id]
+
+
+entry_fields = {
+    'id': fields.Integer,
+    'uri': fields.Url('entry_endpoint'),
+    'entry': fields.String,
+    'creation_date': fields.DateTime
+}
+entry_manager = EntryManager()
+
+# entry collection declaration
+
+
+class Entry(Resource):
+    def abort_if_entry_doesnt_exist(self, id):
+        if id not in entry_manager.entries:
+            abort(
+                status.HTTP_404_NOT_FOUND,
+                entry="Entry {0} doesn't exist".format(id))
+
+
 app = Flask(__name__)
 api = Api(app)
 api.add_resource(EntryList, '/api/entries/')
