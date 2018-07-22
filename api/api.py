@@ -42,6 +42,10 @@ class Entry(Resource):
                 status.HTTP_404_NOT_FOUND,
                 entry="Entry {0} doesn't exist".format(id))
 
+    @marshal_with(entry_fields)
+    def get(self, id):
+        self.abort_if_entry_doesnt_exist(id)
+        return entry_manager.get_entry(id)
 
 class EntryList(Resource):
     @marshal_with(entry_fields)
