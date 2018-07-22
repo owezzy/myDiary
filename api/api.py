@@ -47,6 +47,10 @@ class Entry(Resource):
         self.abort_if_entry_doesnt_exist(id)
         return entry_manager.get_entry(id)
 
+    def get(self, id):
+        self.abort_if_entry_doesnt_exist(id)
+        entry_manager.delete_entry(id
+
     @marshal_with(entry_fields)
     def patch(self, id):
         self.abort_if_entry_doesnt_exist(id)
@@ -60,6 +64,10 @@ class Entry(Resource):
 
 class EntryList(Resource):
     @marshal_with(entry_fields)
+    def get(self):
+        return [v for v in entry_manager.entries.values()]
+
+    @marshal_with(entry_fields)
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('entry', type=str, required=True, help='Entry cannot be blank')
@@ -69,6 +77,8 @@ class EntryList(Resource):
             creation_date=datetime.now(utc))
         entry_manager.insert_entry(entry)
         return entry, status.HTTP_201_CREATED
+
+
 
 app = Flask(__name__)
 api = Api(app)
