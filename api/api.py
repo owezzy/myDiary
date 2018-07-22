@@ -43,6 +43,18 @@ class Entry(Resource):
                 entry="Entry {0} doesn't exist".format(id))
 
 
+class EntryList(Resource):
+    @marshal_with(entry_fields)
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('entry', type=str, required=True, help='Entry cannot be blank')
+        args = parser.parse_args()
+        entry = EntryModel(
+            entry=args['entry'],
+            creation_date=datetime.now(utc))
+        entry_manager.insert_entry(entry)
+        return entry, status.HTTP_201_CREATED
+
 app = Flask(__name__)
 api = Api(app)
 api.add_resource(EntryList, '/api/entries/')
