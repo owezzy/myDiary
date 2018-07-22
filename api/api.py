@@ -47,6 +47,17 @@ class Entry(Resource):
         self.abort_if_entry_doesnt_exist(id)
         return entry_manager.get_entry(id)
 
+    @marshal_with(entry_fields)
+    def patch(self, id):
+        self.abort_if_entry_doesnt_exist(id)
+        entry = entry_manager.get_entry(id)
+        parser = reqparse.RequestParser()
+        parser.add_argument('entry', type=str)
+        args = parser.parse_args()
+        if 'entry' in args:
+            entry.entry = args['entry']
+        return entry
+
 class EntryList(Resource):
     @marshal_with(entry_fields)
     def post(self):
