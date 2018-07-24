@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_restful import abort, Api, fields, marshal_with, reqparse, Resource
 from datetime import datetime
-from models import EntryModel
-import status
+from api.app.models import EntryModel
+from api.app import status
 from pytz import utc
 
 
@@ -13,7 +13,7 @@ class EntryManager:
         self.entries = {}
 
     def insert_entry(self, entry):
-        self.__class__ .last_id += 1
+        self.__class__.last_id += 1
         entry.id = self.__class__.last_id
         self.entries[self.__class__.last_id] = entry
 
@@ -32,6 +32,7 @@ entry_fields = {
 }
 entry_manager = EntryManager()
 
+
 # entry collection declaration
 
 
@@ -49,7 +50,7 @@ class Entry(Resource):
 
     def get(self, id):
         self.abort_if_entry_doesnt_exist(id)
-        entry_manager.delete_entry(id
+        entry_manager.delete_entry(id)
 
     @marshal_with(entry_fields)
     def patch(self, id):
@@ -61,6 +62,7 @@ class Entry(Resource):
         if 'entry' in args:
             entry.entry = args['entry']
         return entry
+
 
 class EntryList(Resource):
     @marshal_with(entry_fields)
@@ -79,12 +81,10 @@ class EntryList(Resource):
         return entry, status.HTTP_201_CREATED
 
 
-
 app = Flask(__name__)
 api = Api(app)
-api.add_resource(EntryList, '/api/entries/')
-api.add_resource(Entry, '/api/entries/<int:id>', endpoint='entry_endpoint')
-
+api.add_resource(EntryList, '/api/v1/entries/')
+api.add_resource(Entry, '/api/v1/entries/<int:id>', endpoint='entry_endpoint')
 
 if __name__ == '__main__':
     app.run(debug=True)
