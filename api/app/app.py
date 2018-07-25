@@ -21,7 +21,8 @@ class EntryManager:
         return self.entries[id]
 
     def delete_entry(self, id):
-        return self.entries[id]
+        return self.entries.pop(id)
+
 
 
 entry_fields = {
@@ -31,6 +32,8 @@ entry_fields = {
     'creation_date': fields.DateTime
 }
 entry_manager = EntryManager()
+
+# local timestamp
 
 
 # entry collection declaration
@@ -48,12 +51,12 @@ class Entry(Resource):
         self.abort_if_entry_doesnt_exist(id)
         return entry_manager.get_entry(id)
 
-    def get(self, id):
+    def delete(self, id):
         self.abort_if_entry_doesnt_exist(id)
         entry_manager.delete_entry(id)
 
     @marshal_with(entry_fields)
-    def patch(self, id):
+    def put(self, id):
         self.abort_if_entry_doesnt_exist(id)
         entry = entry_manager.get_entry(id)
         parser = reqparse.RequestParser()
@@ -83,7 +86,7 @@ class EntryList(Resource):
 
 app = Flask(__name__)
 api = Api(app)
-api.add_resource(EntryList, '/api/v1/entries/')
+api.add_resource(EntryList, '/api/v1/entries')
 api.add_resource(Entry, '/api/v1/entries/<int:id>', endpoint='entry_endpoint')
 
 if __name__ == '__main__':
