@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import abort, Api, fields, marshal_with, reqparse, Resource
 from datetime import datetime
-from models import EntryModel
+from app.models import EntryModel
 from pytz import utc
 
 
