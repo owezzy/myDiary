@@ -1,0 +1,5 @@
+[
+  "unit/test_models.py::test_last_id",
+  "unit/test_models.py::test_insert_entry",
+  "unit/test_models.py::test_get_entry"
+]

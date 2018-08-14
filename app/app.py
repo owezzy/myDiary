@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import abort, Api, fields, marshal_with, reqparse, Resource
 from datetime import datetime
-from models import EntryModel
+from app.models.models import EntryModel
 from pytz import utc
 
 
@@ -35,17 +35,17 @@ class EntryManager:
         return self.entries.pop(id)
 
 
-''' template for a single entry'''
+""" template for a single entry"""
 entry_fields = {
     'id': fields.Integer,
     'uri': fields.Url('entry_endpoint'),
+    'title': fields.String,
     'entry': fields.String,
     'creation_date': fields.DateTime
 }
 
 """initialized entry manager object"""
 entry_manager = EntryManager()
-
 
 # entry object to define entries
 
