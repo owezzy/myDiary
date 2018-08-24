@@ -10,8 +10,11 @@ class EntryModel:
 
 # user model
 class UserModel:
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, creation_date):
         self.id = 0
         self.username = username
         self.email = email
         self.password = password
+        self.creation_date = creation_date
+
+

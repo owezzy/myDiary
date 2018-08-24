@@ -2,7 +2,6 @@ from flask import Flask
 from flask_restful import abort, Api, fields, marshal_with, reqparse, Resource
 from datetime import datetime
 <<<<<<< HEAD
-from app.models.models import EntryModel
 =======
 from app.models import EntryModel
 >>>>>>> 610d969f414195269908e904802cfe8ee786d5b5
