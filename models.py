@@ -1,3 +1,17 @@
+from marshmallow import Schema,fields, pre_load
+from marshmallow import validate
+import psycopg2
+from flask_marshmallow import Marshmallow
+
+pgdb = psycopg2
+ma = Marshmallow
+
+# connect to database
+conn = pgdb.connect("dbname=diary user=owen")
+
+# open cursor to perform db operation
+cur = conn.cursor()
+
 
 class EntryModel:
     def __init__(self, title, entry, creation_date):
