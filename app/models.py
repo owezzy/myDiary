@@ -1,14 +1,12 @@
-from marshmallow import Schema,fields, pre_load
+from marshmallow import Schema, fields, pre_load
 from marshmallow import validate
-from  flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-
 
 db = SQLAlchemy()
 ma = Marshmallow()
-
-
 """manipulate resources through SQL alchemly sessions """
+
 
 class AddUpdateDelete():
     def add(self, resource):
@@ -27,8 +25,10 @@ class EntryModel(db.Model, AddUpdateDelete):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(70), nullable=False)
     entry = db.Column(db.String(500), nullable=False)
-    creation_date = db.Column(db.TIMESTAMP,
-                              server_default=db.func.current_timestamp(), nullable=False)
+    creation_date = db.Column(
+        db.TIMESTAMP,
+        server_default=db.func.current_timestamp(),
+        nullable=False)
 
     def __init__(self, title, entry, creation_date):
         # new id is generated automatically
@@ -55,5 +55,3 @@ class UserModel:
         self.email = email
         self.password = password
         self.creation_date = creation_date
-
-
