@@ -1,16 +1,26 @@
 from marshmallow import Schema,fields, pre_load
 from marshmallow import validate
-import psycopg2
+from  flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
-pgdb = psycopg2
-ma = Marshmallow
 
-# connect to database
-conn = pgdb.connect("dbname=diary user=owen")
+db = SQLAlchemy()
+ma = Marshmallow()
 
-# open cursor to perform db operation
-cur = conn.cursor()
+
+"""manipulate resources through SQL alchemly sessions """
+
+class AddUpdateDelete():
+    def add(self, resource):
+        db.session.add(resource)
+        return db.session.commit()
+
+    def update(self):
+        return db.session.commit()
+
+    def delete(self, resource):
+        db.session.delete(resource)
+        return db.session.commit()
 
 
 class EntryModel:
