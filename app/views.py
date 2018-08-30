@@ -39,4 +39,47 @@ class EntryResource(Resource):
                 db.session.rollback()
                 resp = {"error": str(e)}
                 return resp,HTTP_400_BAD_REQUEST
-        
+
+    def delete(self, id):
+        entry = EntryModel.query.get_or_404(id)
+        try:
+            delete = entry.delete(entry)
+            response = make_response()
+            return response, HTTP_204_NO_CONTENT
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            resp = jsonify({"error": str(e) })
+            return resp, HTTP_401_UNAUTHORIZED
+
+
+class EntryListResource(Resource):
+    def get(self):
+        entry = EntryModel.query.all()
+        result = entry_scheme.dump(entry, many=True).data
+        return result
+
+    def post(self):
+        request_dict = request.get_json()
+        if not request_dict:
+            response = {'message':'no input data provided'}
+            return response, HTTP_400_BAD_REQUEST
+        errors = entry_scheme.validate(request_dict)
+        if errors:
+            if errors:
+                return errors, status.HTTP_400_BAD_REQUEST
+            try:
+                # create a new Entry
+                entry = EntryModel(
+                    entry=request_dict['entry'],
+                    title=request_dict['title'],)
+                    entry.add(entry)
+                    query = EntryModel.query.get(enrty.id)
+                    result = entry_schema.dump(query).data
+                    return result, HTTP_201_CREATED
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                resp = jsonify({"error": str(e)})
+                return resp, HTTP_400_BAD_REQUEST
+            
+api.add_resource(EntryResource, '/entries/<int:id>')
+api.add_resource(EntryListResource, '/entries/')
