@@ -4,7 +4,7 @@ from models import db
 from run import app
 
 migrate = Migrate(app, db)
-manager = Manger(app)
+manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
