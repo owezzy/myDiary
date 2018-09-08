@@ -1,85 +1,106 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
-from models import db, EntryModel,EntryModelScheme
-from sqlalchemy.exc import SQLAlchemyError
+from models import db, EntryModel, EntryModelScheme
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 
-api_bp = Blueprint('api'__name__)
-entry_scheme = EntryModelScheme
+api_bp = Blueprint('api', __name__)
+entry_schema = EntryModelScheme()
+entries_schema = EntryModelScheme(many=True)
 api = Api(api_bp)
 
+
 class EntryResource(Resource):
-    def get(self, id):
-        entry = EntryModel.query.get_or_404(id)
-        result = entry_scheme.dump(entry).data
+
+    @staticmethod
+    def get(id):
+        try:
+            entry = EntryModel.query.get_or_404(id)
+        except IntegrityError:
+            return jsonify({'message': 'Entry does not exists!'})
+        result = entry_schema.dump(entry).data
         return result
 
-    def path(self, id):
+    def put(self, id):
         entry = EntryModel.query.get_or_404(id)
         entry_dict = request.get_json(force=True)
         if 'entry' in entry_dict:
-            entry_entry = entry_dict['entry'] 
-            if EntryModel.is_unique(id=id, entry=entry_entry):
-                entry.entry = entry_entry
+            entry_entry = entry_dict['entry']
+            if EntryModel.is_unique(entry=entry_entry):
+                entry.entry = id
             else:
-                response = {'error': 'An entry with the same entry already exists'}
-                return response,HTTP_400_BAD_REQUEST
+                response = {'error': 'No Changes made to the Entry'}
+                return response, 400
         if 'title' in entry_dict:
             entry.title = entry_dict['title']
-        dumped_entry, dump_errors = entry_schema.dump(message)
+        if 'content' in entry_dict:
+            entry.content = entry_dict['content']
+        dumped_entry, dump_errors = entry_schema.dump(entry)
         if dump_errors:
-            return dump_errors,HTTP_400_BAD_REQUEST
-        validate_errors = entry_schema.validate(dumped_message)
+            return dump_errors, 400
+        validate_errors = entry_schema.validate(dumped_entry)
         if validate_errors:
-            return validate_errors, HTTP_400_BAD_REQUEST
+            return validate_errors, 400
         try:
             entry.update()
             return self.get(id)
         except SQLAlchemyError as e:
-                db.session.rollback()
-                resp = {"error": str(e)}
-                return resp,HTTP_400_BAD_REQUEST
+            db.session.rollback()
+            resp = jsonify({"error": str(e)})
+            return resp, 400
 
-    def delete(self, id):
+    @staticmethod
+    def delete(id):
         entry = EntryModel.query.get_or_404(id)
         try:
             delete = entry.delete(entry)
-            response = make_response()
-            return response, HTTP_204_NO_CONTENT
+            response = {'message': delete}
+            return response, 204
         except SQLAlchemyError as e:
             db.session.rollback()
-            resp = jsonify({"error": str(e) })
-            return resp, HTTP_401_UNAUTHORIZED
+            resp = jsonify({"error": e})
+            return resp, 401
 
 
 class EntryListResource(Resource):
-    def get(self):
-        entry = EntryModel.query.all()
-        result = entry_scheme.dump(entry, many=True).data
+
+    @staticmethod
+    def get():
+        entries = EntryModel.query.all()
+        result = entries_schema.dump(entries, many=True)
         return result
 
-    def post(self):
-        request_dict = request.get_json()
+    @staticmethod
+    def post():
+        request_dict = request.get_json(force=True)
         if not request_dict:
-            response = {'message':'no input data provided'}
-            return response, HTTP_400_BAD_REQUEST
-        errors = entry_scheme.validate(request_dict)
+            response = {'message': 'no input data provided'}
+            return response, 400
+            # Validate and deserialize input
+        errors = entry_schema.validate(request_dict)
         if errors:
-            if errors:
-                return errors, status.HTTP_400_BAD_REQUEST
-            try:
-                # create a new Entry
-                entry = EntryModel(
-                    entry=request_dict['entry'],
-                    title=request_dict['title'],)
-                    entry.add(entry)
-                    query = EntryModel.query.get(enrty.id)
-                    result = entry_schema.dump(query).data
-                    return result, HTTP_201_CREATED
-            except SQLAlchemyError as e:
-                db.session.rollback()
-                resp = jsonify({"error": str(e)})
-                return resp, HTTP_400_BAD_REQUEST
-            
+            return errors, 400
+        if not EntryModel.is_unique(id=0):
+            response = {'error': 'An entry with the same id already exists!'}
+            return response, 400
+        try:
+            # create a new Entry
+            entry = EntryModel(
+                title=request_dict['title'],
+                content=request_dict['content'],
+            )
+            entry.add(entry)
+            query = EntryModel.query.get_or_404(entry.id)
+            result = entry_schema.dump(query).data
+            resp = {
+                'message': 'Created new Diary entry',
+                'entry': result}
+            return resp, 201
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            res = {'error': e}
+            return res, 400
+
+
 api.add_resource(EntryResource, '/entries/<int:id>')
 api.add_resource(EntryListResource, '/entries/')
