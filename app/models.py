@@ -23,6 +23,7 @@ class AddUpdateDelete:
         return db.session.commit()
 
 
+# Diary entry
 class EntryModel(db.Model, AddUpdateDelete):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(70), nullable=False)
@@ -76,10 +77,20 @@ class EntryModelScheme(ma.ModelSchema):
 
 
 # user model
-class UserModel:
-    def __init__(self, username, email, password, creation_date):
-        self.id = 0
-        self.username = username
-        self.email = email
-        self.password = password
-        self.creation_date = creation_date
+class UserModel(db.Model, AddUpdateDelete):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(70), nullable=False)
+    email = db.Column(db.String(140), nullable=False)
+    password = db.Column(db.String(70), nullable=False)
+    creation_date = db.Column(
+        db.TIMESTAMP,
+        server_default=db.func.current_timestamp(),
+        nullable=False)
+
+
+class UserModelScheme(ma.ModelSchema):
+        id = fields.Int(dump_only=True)
+        username = fields.String(required=True, validate=must_not_be_blank)
+        email = fields.Email(required=True, validate=must_not_be_blank)
+        password = fields.String(required=True, validate=True)
+        creation_date = fields.DateTime(dump_only=True)

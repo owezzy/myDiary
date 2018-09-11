@@ -3,7 +3,6 @@ from flask_restful import Api, Resource
 from models import db, EntryModel, EntryModelScheme
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
-
 api_bp = Blueprint('api', __name__)
 entry_schema = EntryModelScheme()
 entries_schema = EntryModelScheme(many=True)
@@ -102,5 +101,46 @@ class EntryListResource(Resource):
             return res, 400
 
 
+class UserRegistration(Resource):
+
+    def post(self):
+        return {'message': 'User Registration'}
+
+
+class UserLogin(Resource):
+    def post(self):
+        return {'message': 'user Login'}
+
+
+class UserLogoutAccess(Resource):
+    def post(self):
+        return {'message': 'user logout'}
+
+
+class UserLogoutRefresh(Resource):
+    def post(self):
+        return {'message': 'User logout'}
+
+
+class TokenRefresh(Resource):
+    def post(self):
+        return {'message': 'Token refresh'}
+
+
+# for testing purposes
+class AllUsers(Resource):
+    def get(self):
+        return {'message': 'List of users'}
+
+    def delete(self):
+        return {'message': 'Delete all users'}
+
+
 api.add_resource(EntryResource, '/entries/<int:id>')
 api.add_resource(EntryListResource, '/entries/')
+api.add_resource(UserRegistration, '/registration')
+api.add_resource(UserLogin, '/login')
+api.add_resource(UserLogoutAccess, '/logout/access')
+api.add_resource(UserLogoutRefresh, '/logout/refresh')
+api.add_resource(TokenRefresh, '/token/refresh')
+api.add_resource(AllUsers, '/users')
