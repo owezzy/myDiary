@@ -7,7 +7,7 @@ PORT = 5000
 HOST = "127.0.0.1"
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = True
-SQLALCHEMY_DATABASE_URI = 'sqlite:////home/owen_adira/vs_code/Andela BootCamp/myDiary/entries.db'
+SQLALCHEMY_DATABASE_URI = 'sqlite:////home/owen_adira/vs_code/AndelaBootCamp/myDiary/entries.db'
 # SQLALCHEMY_DATABASE_URI = "postgresql://{DB_USER}:{DB_PASS}@{DB_ADDR}/{DB_NAME}".format(
 #    DB_USER="owen", DB_PASS="abc@123", DB_ADDR="127.0.0.1", DB_NAME="diary")
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')

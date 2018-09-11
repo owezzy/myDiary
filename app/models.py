@@ -87,10 +87,20 @@ class UserModel(db.Model, AddUpdateDelete):
         server_default=db.func.current_timestamp(),
         nullable=False)
 
+    def __init__(self, username, email, password):
+        # new id is generated automatically
+        self.username = username
+        self.email = email
+        self.password = password
 
-class UserModelScheme(ma.ModelSchema):
-        id = fields.Int(dump_only=True)
-        username = fields.String(required=True, validate=must_not_be_blank)
-        email = fields.Email(required=True, validate=must_not_be_blank)
-        password = fields.String(required=True, validate=True)
-        creation_date = fields.DateTime(dump_only=True)
+    @classmethod
+    def find_by_username(cls, username):
+        return cls.query.filter_by(username=username).first()
+
+
+class UserModelSchema(ma.ModelSchema):
+    id = fields.Int(dump_only=True)
+    username = fields.String(required=True, validate=must_not_be_blank)
+    email = fields.Email(required=True, validate=must_not_be_blank)
+    password = fields.String(required=True, validate=must_not_be_blank)
+    creation_date = fields.DateTime(dump_only=True)
