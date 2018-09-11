@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from marshmallow import fields, pre_load, ValidationError, validates_schema
+from sqlalchemy.exc import SQLAlchemyError
 
 db = SQLAlchemy()
 ma = Marshmallow()

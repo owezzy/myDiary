@@ -5,8 +5,9 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 api_bp = Blueprint('api', __name__)
 entry_schema = EntryModelScheme()
-user_schema = UserModelSchema()
 entries_schema = EntryModelScheme(many=True)
+user_schema = UserModelSchema()
+users_schema = UserModelSchema(many=True)
 api = Api(api_bp)
 
 
@@ -126,7 +127,14 @@ class UserRegistration(Resource):
 
 class UserLogin(Resource):
     def post(self):
-        return {'message': 'user Login'}
+        request_dict = request.get_json()
+        current_user = UserModel.find_by_username(request_dict['username'])
+        if not current_user:
+            return {'message': 'User {} doesn\'t exist'.format(request_dict['username'])}
+        if request_dict['password'] == current_user.password:
+            return {'message': 'Logged in as {}'.format(current_user.username)}
+        else:
+            return {'message': 'Password does not match the username'}
 
 
 class UserLogoutAccess(Resource):
@@ -146,11 +154,23 @@ class TokenRefresh(Resource):
 
 # for testing purposes
 class AllUsers(Resource):
-    def get(self):
-        return {'message': 'List of users'}
+    @staticmethod
+    def get():
+        users = UserModel.query.all()
+        result = entries_schema.dump(users, many=True)
+        return result
 
-    def delete(self):
-        return {'message': 'Delete all users'}
+    @staticmethod
+    def delete():
+        users = UserModel.query.all()
+        try:
+            delete = users.delete(users)
+            response = {'message': delete}
+            return response, 204
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            resp = jsonify({"error": e})
+            return resp, 401
 
 
 api.add_resource(EntryResource, '/entries/<int:id>')
