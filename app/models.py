@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from marshmallow import fields, pre_load, ValidationError, validates_schema
-from sqlalchemy.exc import SQLAlchemyError
+from passlib.hash import pbkdf2_sha256 as sha256
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -98,6 +98,14 @@ class UserModel(db.Model, AddUpdateDelete):
     def find_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
 
+    @staticmethod
+    def generate_hash(password):
+        return sha256.hash(password)
+
+    @staticmethod
+    def verify_hash(password, hash):
+        return sha256.verify(password, hash)
+
 
 class UserModelSchema(ma.ModelSchema):
     id = fields.Int(dump_only=True)
@@ -105,3 +113,22 @@ class UserModelSchema(ma.ModelSchema):
     email = fields.Email(required=True, validate=must_not_be_blank)
     password = fields.String(required=True, validate=must_not_be_blank)
     creation_date = fields.DateTime(dump_only=True)
+
+
+class RevokedTokenModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(120))
+
+    def add(self):
+        db.session.add(self)
+        return db.session.commit()
+
+    @classmethod
+    def is_jti_blacklisted(cls, jti):
+        query = cls.query.filter_by(jti=jti).first()
+        return bool(query)
+
+
+class RevokedTokenModelSchema(ma.ModelSchema):
+    id = fields.Int(dump_only=True)
+    jti = fields.String(required=True)

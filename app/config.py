@@ -13,3 +13,6 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:////home/owen_adira/vs_code/AndelaBootCamp/myD
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 PAGINATION_PAGE_SIZE = 5
 PAGINATION_PAGE_ARGUMENT_NAME = 'page'
+JWT_SECRET_KEY = 'jwt-secret-string'
+JWT_BLACKLIST_ENABLED = True
+JWT_BLACKLIST_TOKEN_CHECKS = 'refresh'

@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
-from models import db, EntryModel, EntryModelScheme, UserModel, UserModelSchema
+from models import db, EntryModel, EntryModelScheme, UserModel, UserModelSchema, RevokedTokenModel
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required,
+                                jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 
 api_bp = Blueprint('api', __name__)
 entry_schema = EntryModelScheme()
@@ -64,15 +66,14 @@ class EntryResource(Resource):
 
 
 class EntryListResource(Resource):
-
-    @staticmethod
-    def get():
+    @jwt_required
+    def get(self):
         entries = EntryModel.query.all()
         result = entries_schema.dump(entries, many=True)
         return result
 
-    @staticmethod
-    def post():
+    @jwt_required
+    def post(self):
         request_dict = request.get_json(force=True)
         # Validate and deserialize input
         errors = entry_schema.validate(request_dict)
@@ -114,12 +115,16 @@ class UserRegistration(Resource):
             user = UserModel(
                 username=request_dict['username'],
                 email=request_dict['email'],
-                password=request_dict['password']
+                password=UserModel.generate_hash(request_dict['password'])
             )
             user.add(user)
+            access_token = create_access_token(identity=request_dict['username'])
+            refresh_token = create_refresh_token(identity=request_dict['username'])
             query = UserModel.query.get_or_404(user.id)
             result = user_schema.dump(query).data
-            return {'created new diary User': result['username']}, 201
+            return {'created new diary User': result['username'],
+                    'access_token': access_token,
+                    'refresh_token': refresh_token}, 201
         except SQLAlchemyError as e:
             db.session.rollback()
             return {'error': e}, 400
@@ -131,40 +136,65 @@ class UserLogin(Resource):
         current_user = UserModel.find_by_username(request_dict['username'])
         if not current_user:
             return {'message': 'User {} doesn\'t exist'.format(request_dict['username'])}
-        if request_dict['password'] == current_user.password:
-            return {'message': 'Logged in as {}'.format(current_user.username)}
+
+        if UserModel.verify_hash(request_dict['password'], current_user.password):
+            access_token = create_access_token(identity=request_dict['username'])
+            refresh_token = create_refresh_token(identity=request_dict['username'])
+            return {
+                'message': 'Logged in as {}'.format(current_user.username),
+                'access_token': access_token,
+                'refresh_token': refresh_token
+            }
         else:
             return {'message': 'Password does not match the username'}
 
 
 class UserLogoutAccess(Resource):
+    @jwt_refresh_token_required
     def post(self):
-        return {'message': 'user logout'}
+        jti = get_raw_jwt()['jti']
+        try:
+            revoked_token = RevokedTokenModel(jti=jti)
+            revoked_token.add()
+            return {'message': 'Access token has been revoked'}
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return {'error': e}, 400
 
 
 class UserLogoutRefresh(Resource):
+    @jwt_refresh_token_required
     def post(self):
-        return {'message': 'User logout'}
+        jti = get_raw_jwt()['jti']
+        try:
+            revoked_token = RevokedTokenModel(jti=jti)
+            revoked_token.add()
+            return {'message': 'Refresh token has been revoked'}
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return {'error': e}, 400
 
 
 class TokenRefresh(Resource):
+    @jwt_refresh_token_required
     def post(self):
-        return {'message': 'Token refresh'}
+        current_user = get_jwt_identity()
+        access_token = create_access_token(identity=current_user)
+        return {'access_token': access_token}
 
 
 # for testing purposes
 class AllUsers(Resource):
-    @staticmethod
-    def get():
+    def get(self):
         users = UserModel.query.all()
-        result = entries_schema.dump(users, many=True)
+        result = users_schema.dump(users, many=True)
         return result
 
-    @staticmethod
-    def delete():
-        users = UserModel.query.all()
+    def delete(self):
+        user = UserModel.query.all()
         try:
-            delete = users.delete(users)
+            delete = user.delete()
+            db.session.commit()
             response = {'message': delete}
             return response, 204
         except SQLAlchemyError as e:
