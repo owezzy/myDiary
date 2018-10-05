@@ -1,9 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify,render_template
 from flask_restful import Api, Resource
-from models import db, EntryModel, EntryModelScheme, UserModel, UserModelSchema, RevokedTokenModel
+from models import db, EntryModel, EntryModelScheme, UserModel, UserModelSchema
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required,
-                                jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
+
 
 api_bp = Blueprint('api', __name__)
 entry_schema = EntryModelScheme()
@@ -66,13 +65,11 @@ class EntryResource(Resource):
 
 
 class EntryListResource(Resource):
-    @jwt_required
     def get(self):
         entries = EntryModel.query.all()
         result = entries_schema.dump(entries, many=True)
         return result
 
-    @jwt_required
     def post(self):
         request_dict = request.get_json(force=True)
         # Validate and deserialize input
@@ -150,7 +147,6 @@ class UserLogin(Resource):
 
 
 class UserLogoutAccess(Resource):
-    @jwt_refresh_token_required
     def post(self):
         jti = get_raw_jwt()['jti']
         try:
@@ -163,7 +159,6 @@ class UserLogoutAccess(Resource):
 
 
 class UserLogoutRefresh(Resource):
-    @jwt_refresh_token_required
     def post(self):
         jti = get_raw_jwt()['jti']
         try:
@@ -176,7 +171,6 @@ class UserLogoutRefresh(Resource):
 
 
 class TokenRefresh(Resource):
-    @jwt_refresh_token_required
     def post(self):
         current_user = get_jwt_identity()
         access_token = create_access_token(identity=current_user)
@@ -205,9 +199,3 @@ class AllUsers(Resource):
 
 api.add_resource(EntryResource, '/entries/<int:id>')
 api.add_resource(EntryListResource, '/entries/')
-api.add_resource(UserRegistration, '/registration')
-api.add_resource(UserLogin, '/login')
-api.add_resource(UserLogoutAccess, '/logout/access')
-api.add_resource(UserLogoutRefresh, '/logout/refresh')
-api.add_resource(TokenRefresh, '/token/refresh')
-api.add_resource(AllUsers, '/users')

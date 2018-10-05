@@ -7,4 +7,5 @@ if __name__ == '__main__':
         host=app.config['HOST'],
         port=app.config['PORT'],
         debug=app.config['DEBUG'],
-        jwt=app.config['JWT_SECRET_KEY'])
+        jwt=app.config['JWT_SECRET_KEY'],
+    )
